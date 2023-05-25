@@ -47,7 +47,7 @@ async function showForecast(url, latlng) {
     <table>
         <tr><td>Luftdruck in hPa:</td><td>${current.air_pressure_at_sea_level}</td></tr>
         <tr><td>Lufttemperatur in °C:</td><td>${current.air_temperature}</td></tr>
-        <tr><td>Bewölungsgrad in %:</td><td>${current.cloud_area_fraction}</td></tr>
+        <tr><td>Bewölkungsgrad in %:</td><td>${current.cloud_area_fraction}</td></tr>
         <tr><td>Relative Feuchte</td><td>${current.relative_humidity}</td></tr>
         <tr><td>Windrichtung in Grad</td><td>${current.wind_from_direction}</td></tr>
         <tr><td>Windgeschwindigkeit in km/h:</td><td>${current.wind_speed}</td></tr>
@@ -75,3 +75,30 @@ map.on("click", function(evt) {
 map.fireEvent ("click", {
     latlng: L.latLng(ibk.lat, ibk.lng)
 })
+
+//Winddaten laden
+async function loadWind(url) {
+    let response = await fetch(url);
+    let jsondata = await response.json();
+    console.log(jsondata);
+    var velocityLayer = L.velocityLayer({
+        displayValues: true,
+        lineWidth: 3,
+        displayOptions: {
+          // label prefix
+          velocityType: "Global Wind",
+          // leaflet control position
+          position: "bottomright",
+          // no data at cursor
+          emptyString: "keine Daten vorhanden",
+          // one of: ['ms', 'k/h', 'mph', 'kt']
+          speedUnit: "k/h",
+          // direction label prefix
+          directionString: "Windrichtung",
+          // speed label prefix
+          speedString: "Geschwindigkeit",
+        },
+        data: jsondata, 
+      }).addTo(map);
+}
+loadWind("https://geographie.uibk.ac.at/data/ecmwf/data/wind-10u-10v-europe.json");
