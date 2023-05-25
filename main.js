@@ -34,10 +34,10 @@ L.control.scale({
 async function showForecast(url, latlng) {
     let response = await fetch(url);
     let jsondata = await response.json();
-    console.log(jsondata, latlng);
+    //console.log(jsondata, latlng);
 
     let current = jsondata.properties.timeseries[0].data.instant.details;
-    console.log(current);
+    //console.log(current);
 
     let timestamp = new Date(jsondata.properties.meta.updated_at).toLocaleString();
     let timeseries = jsondata.properties.timeseries;
@@ -55,18 +55,18 @@ async function showForecast(url, latlng) {
     `;
     //Wettersymbol
     for (let i=0; i<=24; i+=3){
-        console.log(timeseries[i]);
+        //console.log(timeseries[i]);
         let icon = timeseries[i].data.next_1_hours.summary.symbol_code;
         let image = `icons/${icon}.svg`;
         marker += `<img src="${image}" style="width:32px;" title="${timeseries[i].time.toLocaleString()}">`
-        console.log(icon,image);
+        //console.log(icon,image);
     }
     L.popup().setLatLng(latlng).setContent(marker).openOn(map);
 }
 
 //auf Kartenklick reagieren
 map.on("click", function(evt) {
-    console.log(evt.latlng.lat);
+    //console.log(evt.latlng.lat);
     let url = `https://api.met.no/weatherapi/locationforecast/2.0/compact?lat=${evt.latlng.lat}&lon=${evt.latlng.lng}`;
     showForecast(url, evt.latlng);
 });
